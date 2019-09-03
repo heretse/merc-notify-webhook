@@ -1,0 +1,33 @@
+{
+  "name": "merc-notify-webhook",
+  "version": "1.0.0",
+  "description": "This a webhook server for MERC Notify",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heretse/merc-notify-webhook.git"
+  },
+  "keywords": [
+    "MERC",
+    "IIoT",
+    "FreePP",
+    "Web",
+    "Hook",
+    "Notification"
+  ],
+  "author": "Winston Hsieh <winston_hsieh@gemteks.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/heretse/merc-notify-webhook/issues"
+  },
+  "homepage": "https://github.com/heretse/merc-notify-webhook#readme",
+  "dependencies": {
+    "async": "^3.1.0",
+    "express": "^4.17.1",
+    "freepp-chatapi-nodejs-sdk": "^1.0.4"
+  }
+}
