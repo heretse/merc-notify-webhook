@@ -4,7 +4,7 @@ const async = require('async');
 
 const config = {
     accessToken: 'QQUnatOESm2XgCTPNKIscTcHBA8P9VLX83bXDPYE',
-    appKey: 'dc78cf54-c57d-42c4-97b3-716e992079fa',
+    appKey: 'KKVkmyFIEITmrauQMKGDTJhplmhBAImujuwZGXqQ',
 };
 
 // create FreePP SDK client
@@ -12,6 +12,10 @@ const client = freepp.Client(config);
 freepp.middleware(config);
 
 const app = express();
+
+app.get('/', (req, res) => {
+    res.status(200).send(`Now = ${(new Date()).getTime()}`)
+});
 
 app.post('/webhook', freepp.middleware(config), (req, res) => {
     console.log('Got message', req.body, req.headers);
