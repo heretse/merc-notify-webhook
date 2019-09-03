@@ -46,5 +46,5 @@ function handleEvent(event, cb) {
     return replyText(event.replyToken, event.message.value, cb);
 }
 
-console.log('Listening on 8080');
-app.listen(8080);
+console.log(`Listening on ${process.env.PORT}`);
+app.listen(process.env.PORT || 3000);
