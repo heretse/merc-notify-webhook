@@ -2,6 +2,9 @@
   "name": "merc-notify-webhook",
   "version": "1.0.0",
   "description": "This a webhook server for MERC Notify",
+  "engines": {
+    "node": "8.12.0"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
