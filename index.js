@@ -14,7 +14,7 @@ freepp.middleware(config);
 const app = express();
 
 app.get('/', (req, res) => {
-    res.status(200).send(`Now = ${(new Date()).getTime()}`)
+    res.status(200).send(`Now = ${(new Date()).getTime()}`);
 });
 
 app.post('/webhook', freepp.middleware(config), (req, res) => {
@@ -27,6 +27,10 @@ app.post('/webhook', freepp.middleware(config), (req, res) => {
         }
         res.end();
     })
+});
+
+app.get('/callback', (req, res) => {
+    res.status(200).json(`'Got code = ${req.query.code}`);
 });
 
 // simple reply text function
@@ -46,5 +50,5 @@ function handleEvent(event, cb) {
     return replyText(event.replyToken, event.message.value, cb);
 }
 
-console.log(`Listening on ${process.env.PORT}`);
+console.log(`Listening on ${process.env.PORT || 3000}`);
 app.listen(process.env.PORT || 3000);
