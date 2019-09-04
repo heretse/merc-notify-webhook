@@ -2,9 +2,12 @@ const freepp = require('freepp-chatapi-nodejs-sdk');
 const express = require('express');
 const async = require('async');
 
+const appId
+const appKey = 'KKVkmyFIEITmrauQMKGDTJhplmhBAImujuwZGXqQ';
+
 const config = {
     accessToken: 'QQUnatOESm2XgCTPNKIscTcHBA8P9VLX83bXDPYE',
-    appKey: 'KKVkmyFIEITmrauQMKGDTJhplmhBAImujuwZGXqQ',
+    appKey: appKey,
 };
 
 // create FreePP SDK client
@@ -38,6 +41,10 @@ app.get('/callback', (req, res) => {
     
 });
 
+app.post('/callback', (req, res) => {
+
+});
+
 // simple reply text function
 const replyText = (token, texts, cb) => {
     texts = Array.isArray(texts) ? texts : [texts];
@@ -50,6 +57,12 @@ const replyText = (token, texts, cb) => {
 
 function handleEvent(event, cb) {
     if (event.type !== 'Message' || event.message.type !== 'Text') {
+        return cb(null);
+    }
+    if (event.message.value.indexOf('http://') >= 0) {
+        return cb(null);
+    }
+    if (event.message.value.indexOf('https://') >= 0) {
         return cb(null);
     }
     return replyText(event.replyToken, event.message.value, cb);
