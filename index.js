@@ -30,7 +30,12 @@ app.post('/webhook', freepp.middleware(config), (req, res) => {
 });
 
 app.get('/callback', (req, res) => {
-    res.status(200).json(`'Got code = ${req.query.code}`);
+    if (req.query.errorCode) {
+        res.status(200).json(`Got error code = ${req.query.errorCode}, message = ${req.query.errorMsg}`);
+    } else {
+        res.status(200).json(`Got code = ${req.query.code}`);
+    }
+    
 });
 
 // simple reply text function
