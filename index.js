@@ -100,6 +100,10 @@ app.get('/callback', (req, res) => {
     }
 });
 
+app.get('/login', (req, res) => {
+    res.render('pages/login', { pid : "6bb1535b-6fc9-42da-85c9-41f0aca90e34"});
+});
+
 // simple reply text function
 const replyText = (token, texts, cb) => {
     texts = Array.isArray(texts) ? texts : [texts];
