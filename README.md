@@ -21,4 +21,4 @@ This is a Webhook server named "MERC Notify" to integrate FreePP Agent with MERC
 
 5. Response a login page to user with web GUI. 
 
-6. When user login successfully, MERC System links pid with the user for notificaion.
+6. When user login successfully, MERC System links pid with the user for notification.
