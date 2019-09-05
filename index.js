@@ -44,7 +44,7 @@ app.get('/callback', (req, res) => {
     if (req.query.errorCode) {
         res.status(500).json(`Got error code = ${req.query.errorCode}, message = ${req.query.errorMsg}`);
     } else {
-        let options = {
+        let options1 = {
             method: 'POST',
             uri: 'https://pro20.freepp.com/provider/token',
             body: {
@@ -62,43 +62,41 @@ app.get('/callback', (req, res) => {
             json: true
         };
 
-        rp(options)
-            .then(function (body) {
+        rp(options1)
+            .then(function (body1) {
                 // POST succeeded...
-                console.log(body)
-                res.status(200).json(`Got code = ${req.query.code}`);
+                console.log(body1)
+
+                if (body1.token_type && body1.access_token) {
+                    let options2 = {
+                        method: 'GET',
+                        uri: 'https://pro20.freepp.com/OAuthbot/v1/profile',
+                        headers: {
+                            'Authorization': `${body1.token_type} ${body1.access_token}`
+                        },
+                        json: true
+                    };
+            
+                    rp(options2)
+                        .then(function (body2) {
+                            // POST succeeded...
+                            console.log(body2)
+                            return res.status(200).send(`Got pid = ${body2.pid}, name = ${body2.name}`);
+                        })
+                        .catch(function (err) {
+                            // POST failed...
+                            return res.status(500).end();
+                        });
+                } else {
+                    return res.status(500).end();
+                }
+
             })
             .catch(function (err) {
                 // POST failed...
                 console.error(err)
                 return res.status(500).end();
             });
-    }
-});
-
-app.post('/callback', (req, res) => {
-    if (req.body.token_type && req.body.access_token) {
-        let options = {
-            method: 'GET',
-            uri: 'https://pro20.freepp.com/OAuthbot/v1/profile',
-            headers: {
-                'Authentication': `${req.body.token_type} ${req.body.access_token}`
-            },
-            json: true
-        };
-
-        rp(options)
-            .then(function (body) {
-                // POST succeeded...
-                console.log(`Got pid = ${body.pid}, name = ${body.name}`)
-                return res.status(200).end();
-            })
-            .catch(function (err) {
-                // POST failed...
-                return res.status(500).end();
-            });
-    } else {
-        return res.status(500).end();
     }
 });
 
