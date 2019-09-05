@@ -65,10 +65,12 @@ app.get('/callback', (req, res) => {
         rp(options)
             .then(function (body) {
                 // POST succeeded...
+                console.log(body)
                 res.status(200).json(`Got code = ${req.query.code}`);
             })
             .catch(function (err) {
                 // POST failed...
+                console.error(err)
                 return res.status(500).end();
             });
     }
