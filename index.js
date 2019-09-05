@@ -1,6 +1,7 @@
 const freepp = require('freepp-chatapi-nodejs-sdk');
 const express = require('express');
 const async = require('async');
+const rp = require('request-promise');
 
 const appId = '72c55427-eb97-44a0-9d9c-124467230e5d';
 const appKey = 'KKVkmyFIEITmrauQMKGDTJhplmhBAImujuwZGXqQ';
