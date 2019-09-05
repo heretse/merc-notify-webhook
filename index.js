@@ -57,7 +57,7 @@ app.get('/callback', (req, res) => {
             },
             headers: {
                 'Content-Type': 'application/json',
-                'Authentication': `Basic ${new Buffer(appId + ':' + appKey).toString('base64')}`
+                'Authorization': `Basic ${new Buffer(appId + ':' + appKey).toString('base64')}`
             },
             json: true
         };
