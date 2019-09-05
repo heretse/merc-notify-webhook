@@ -19,8 +19,12 @@ freepp.middleware(config);
 
 const app = express();
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+
 app.get('/', (req, res) => {
-    res.status(200).send(`Now = ${(new Date()).getTime()}`);
+    // res.status(200).send(`Now = ${(new Date()).getTime()}`);
+    res.render('pages/index');
 });
 
 app.post('/webhook', freepp.middleware(config), (req, res) => {
@@ -37,15 +41,62 @@ app.post('/webhook', freepp.middleware(config), (req, res) => {
 
 app.get('/callback', (req, res) => {
     if (req.query.errorCode) {
-        res.status(200).json(`Got error code = ${req.query.errorCode}, message = ${req.query.errorMsg}`);
+        res.status(500).json(`Got error code = ${req.query.errorCode}, message = ${req.query.errorMsg}`);
     } else {
-        res.status(200).json(`Got code = ${req.query.code}`);
+        let options = {
+            method: 'POST',
+            uri: 'https://pro20.freepp.com/provider/token',
+            body: {
+                domain_id: domainId,
+                client_id: agentId,
+                agent_id: appId,
+                grant_type: "authorization_code",
+	            redirect_uri: "https://merc-notify-webhook.herokuapp.com/callback",
+	            code: req.query.code
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authentication': `Basic ${new Buffer(appId + ':' + appKey).toString('base64')}`
+            },
+            json: true
+        };
+
+        rp(options)
+            .then(function (body) {
+                // POST succeeded...
+                res.status(200).json(`Got code = ${req.query.code}`);
+            })
+            .catch(function (err) {
+                // POST failed...
+                return res.status(500).end();
+            });
     }
-    
 });
 
 app.post('/callback', (req, res) => {
+    if (req.body.token_type && req.body.access_token) {
+        let options = {
+            method: 'GET',
+            uri: 'https://pro20.freepp.com/OAuthbot/v1/profile',
+            headers: {
+                'Authentication': `${req.body.token_type} ${req.body.access_token}`
+            },
+            json: true
+        };
 
+        rp(options)
+            .then(function (body) {
+                // POST succeeded...
+                console.log(`Got pid = ${body.pid}, name = ${body.name}`)
+                return res.status(200).end();
+            })
+            .catch(function (err) {
+                // POST failed...
+                return res.status(500).end();
+            });
+    } else {
+        return res.status(500).end();
+    }
 });
 
 // simple reply text function

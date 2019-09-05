@@ -30,6 +30,7 @@
   "homepage": "https://github.com/heretse/merc-notify-webhook#readme",
   "dependencies": {
     "async": "^3.1.0",
+    "ejs": "^2.7.1",
     "express": "^4.17.1",
     "freepp-chatapi-nodejs-sdk": "^1.0.4",
     "request": "^2.88.0",
