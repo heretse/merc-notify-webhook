@@ -87,7 +87,7 @@ app.get('/callback', (req, res) => {
                         .then(function (body2) {
                             // POST succeeded...
                             console.log(body2)
-                            return res.status(200).send(`Got pid = ${body2.pid}, name = ${body2.name}`);
+                            res.render('pages/login', { pid : body2.pid});
                         })
                         .catch(function (err) {
                             // POST failed...
@@ -107,7 +107,8 @@ app.get('/callback', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.render('pages/login', { pid : "6bb1535b-6fc9-42da-85c9-41f0aca90e34"});
+    res.render('pages/login', { pid : ""});
+    res.end();
 });
 
 app.post('/login', (req, res) => {
