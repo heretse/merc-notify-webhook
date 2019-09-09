@@ -104,6 +104,24 @@ app.get('/login', (req, res) => {
     res.render('pages/login', { pid : "6bb1535b-6fc9-42da-85c9-41f0aca90e34"});
 });
 
+app.get('/linking', (req, res) => {
+    res.render('pages/error');
+});
+
+app.post('/linking', (req, res) => {
+    if (!req.body.username) {
+        res.render('pages/error');
+    }
+    if (!req.body.password) {
+        res.render('pages/error');
+    }
+    if (!req.body.pid) {
+        res.render('pages/error');
+    }
+    
+    res.render('pages/error');
+});
+
 // simple reply text function
 const replyText = (token, texts, cb) => {
     texts = Array.isArray(texts) ? texts : [texts];
