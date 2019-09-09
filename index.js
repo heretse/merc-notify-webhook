@@ -1,7 +1,10 @@
 const freepp = require('freepp-chatapi-nodejs-sdk');
 const express = require('express');
+const bodyParser = require('body-parser')
 const async = require('async');
 const rp = require('request-promise');
+
+const MERC_HOST = process.env.MERC_HOST
 
 const appId = '72c55427-eb97-44a0-9d9c-124467230e5d';
 const appKey = 'KKVkmyFIEITmrauQMKGDTJhplmhBAImujuwZGXqQ';
@@ -19,6 +22,9 @@ const client = freepp.Client(config);
 freepp.middleware(config);
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -104,11 +110,7 @@ app.get('/login', (req, res) => {
     res.render('pages/login', { pid : "6bb1535b-6fc9-42da-85c9-41f0aca90e34"});
 });
 
-app.get('/linking', (req, res) => {
-    res.render('pages/error');
-});
-
-app.post('/linking', (req, res) => {
+app.post('/login', (req, res) => {
     if (!req.body.username) {
         res.render('pages/error');
     }
@@ -118,7 +120,72 @@ app.post('/linking', (req, res) => {
     if (!req.body.pid) {
         res.render('pages/error');
     }
-    
+
+    let options1 = {
+        method: 'POST',
+        uri: MERC_HOST + '/am-svc/login/gemtek',
+        body: {
+            acc : req.body.username,
+            pwd : req.body.password,
+            type : 0
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        json: true
+    };
+
+    rp(options1)
+        .then(function (body1) {
+            // POST succeeded...
+            if ("000" === body1.responseCode && body1.authToken) {
+                let options2 = {
+                    method: 'POST',
+                    uri: MERC_HOST + '/alt-svc/notifyUpdate',
+                    body: {
+                        token : body1.authToken,
+                        notify : [
+                            {
+                                type : "FREEPP",
+                                token : req.body.pid
+                            }
+                        ]
+                    },
+                    json: true
+                };
+        
+                rp(options2)
+                    .then(function (body2) {
+                        // POST succeeded...
+                        console.log(body2)
+                        if ("000" === body2.responseCode) {
+                            res.render('pages/success');
+                            res.end();
+                        } else {
+                            res.render('pages/error');
+                            res.end();
+                        }
+                    })
+                    .catch(function (err) {
+                        // POST failed...
+                        res.render('pages/error');
+                        res.end();
+                    });
+            } else {
+                res.render('pages/error');
+                res.end();
+            }
+            
+        })
+        .catch(function (err) {
+            // POST failed...
+            console.error(err)
+            res.render('pages/error');
+            res.end();
+        });
+});
+
+app.get('/linking', (req, res) => {
     res.render('pages/error');
 });
 
